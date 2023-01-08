@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "campville.name" -}}
-{{- printf "%s-%s" ( include "app.prefix" . ) ( .Values.env | default "production" ) ( .Chart.Name | trunc 63 | trimSuffix "-" )}}
+{{- printf "%s%s-%s" ( include "app.prefix" . ) ( .Values.env | default "production" ) ( .Chart.Name | trunc 63 | trimSuffix "-" )}}
 {{- end }}
 
 {{- define "campville.env" -}}
