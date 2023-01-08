@@ -1,0 +1,19 @@
+{{- if or (.Values.todo.enabled | default false) (.Values.fullBuild | default false) -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "app.name.todo" . }}
+  labels:
+    appname: {{ template "app.name.todo" . }}
+    ctx: {{ .Chart.Name }}
+    {{- include "campville.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    appname: {{ template "app.name.todo" . }}
+    ctx: {{ .Chart.Name }}
+{{- end -}}

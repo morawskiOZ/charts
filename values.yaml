@@ -1,0 +1,10 @@
+env: production
+prefix: campville
+host: localhost
+fullBuild: true
+todo:
+  enabled: true
+  name: todo
+  tag: 1.1.0
+  autoscaling: false
+  replicas: 1

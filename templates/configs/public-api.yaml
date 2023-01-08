@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "campville.name" . }}-public-api-config
+  labels:
+    ctx: {{ .Chart.Name }}
+    {{- include "campville.labels" . | nindent 4 }}
+data:
+  APP_PORT: "8080"
+  {{- if (ne .Values.env "production")}}
+  API_URL: {{ printf "http://%s" (include "campville.apiHost" .) }}
+  {{- else}}
+  API_URL: {{ printf "https://%s" (include "campville.apiHost" .) }}
+  {{- end }}
+  APP_ENV: {{ template "campville.env" . }}
+  {{- if eq (include "app.prefix" .) "" }}
+  {{- end }}

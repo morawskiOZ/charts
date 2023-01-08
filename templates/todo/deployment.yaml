@@ -1,0 +1,96 @@
+{{- if or (.Values.todo.enabled | default false) (.Values.fullBuild | default false) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.name.todo" . }}
+  labels:
+    appname: {{ template "app.name.todo" . }}
+    ctx: {{ .Chart.Name }}
+    {{- include "campville.labels" . | nindent 4 }}
+spec:
+  progressDeadlineSeconds: 300
+  selector:
+    matchLabels:
+      appname: {{ template "app.name.todo" . }}
+      ctx: {{ .Chart.Name }}
+  {{- if not .Values.todo.autoscaling }}
+  replicas: {{ .Values.todo.replicas | default "2" }}
+  {{- end }}
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port: '8080'
+        discovery.hash: 'true'
+      labels:
+        appname: {{ template "app.name.todo" . }}
+        ctx: {{ .Chart.Name }}
+        helm.sh/revision: {{ .Release.Revision | quote }}
+        tcp/8080: ingress
+        traefik: egress
+        http: egress
+        {{- include "campville.labels" . | nindent 8 }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 10000
+      containers:
+        - image: registry.digitalocean.com/morawskioz-do/todo:{{ .Values.todo.tag | default "latest" }}
+          name: {{ template "app.name.todo" . }}
+          securityContext:
+            readOnlyRootFilesystem: true
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "600m"
+              memory: 512Mi
+            requests:
+              cpu: "100m"
+              memory: 96Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            periodSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            periodSeconds: 3
+            failureThreshold: 3
+          envFrom:
+          - secretRef:
+              name: {{ template "campville.name" . }}-connection-secrets
+          - configMapRef:
+              name: {{ template "campville.name" . }}-config
+          - configMapRef:
+              name: {{ template "campville.name" . }}-public-api-config
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      nodeSelector:
+        role/{{ template "campville.node.role" . }}: "true"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: appname
+                      operator: In
+                      values:
+                        - {{ template "app.name.todo" . }}
+                topologyKey: kubernetes.io/hostname
+{{- end }}

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "campville.name" . }}-config
+  labels:
+    ctx: {{ .Chart.Name }}
+    {{- include "campville.labels" . | nindent 4 }}
+data:
+  API_GATEWAY_HOST: http://{{ template "campville.apiHost" . }}
+  APP_ENV: {{ template "campville.env" . }}
+  {{- if eq (include "campville.env" .) "production" }}
+  NGINX_ENV: prod
+  {{- else }}
+  NGINX_ENV: {{ template "campville.env" . }}
+  {{- end }}
+  {{- if eq (include "app.prefix" .) "" }}
+  {{- end }}
+{{ (.Files.Get (include "campville.path.config" . )) | indent 2 }}

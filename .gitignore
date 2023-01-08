@@ -1,0 +1,6 @@
+# IDE
+.idea
+.fleet
+
+# OS
+.DS_Store

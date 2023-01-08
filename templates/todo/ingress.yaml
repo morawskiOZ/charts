@@ -1,0 +1,24 @@
+{{- if or (.Values.todo.enabled | default false) (.Values.fullBuild | default false) -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ template "app.name.todo" . }}
+  labels:
+    appname: {{ template "app.name.todo" . }}
+    ctx: {{ .Chart.Name }}
+    {{- include "campville.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`{{- template "campville.apiHost" . }}`) && PathPrefix(`/todo`)
+      middlewares:
+        - name: {{ template "app.name.todo" . }}-stripprefix
+        - name: {{ template "campville.name" . }}-cors-all
+      priority: 40
+      services:
+        - kind: Service
+          name: {{ template "app.name.todo" . }}
+          port: 80
+{{- end -}}
