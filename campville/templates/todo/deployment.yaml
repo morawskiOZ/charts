@@ -79,8 +79,6 @@ spec:
       imagePullSecrets:
         - name: regcred
       restartPolicy: Always
-      nodeSelector:
-        role/{{ template "campville.node.role" . }}: "true"
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
