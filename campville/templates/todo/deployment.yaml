@@ -41,7 +41,7 @@ spec:
       containers:
         - image: registry.digitalocean.com/morawskioz-do/todo:{{ .Values.todo.tag | default "latest" }}
           imagePullSecrets:
-            - name: do-registry
+            - name: registry-morawskioz-do
           name: {{ template "app.name.todo" . }}
           securityContext:
             readOnlyRootFilesystem: true
