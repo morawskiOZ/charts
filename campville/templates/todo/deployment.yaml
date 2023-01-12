@@ -38,10 +38,10 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         runAsUser: 10000
+      imagePullSecrets:
+        - name: registry-morawskioz-do
       containers:
         - image: registry.digitalocean.com/morawskioz-do/todo:{{ .Values.todo.tag | default "latest" }}
-          imagePullSecrets:
-            - name: registry-morawskioz-do
           name: {{ template "app.name.todo" . }}
           securityContext:
             readOnlyRootFilesystem: true
@@ -78,8 +78,6 @@ spec:
           - configMapRef:
               name: {{ template "campville.name" . }}-public-api-config
           imagePullPolicy: Always
-      imagePullSecrets:
-        - name: regcred
       restartPolicy: Always
       affinity:
         podAntiAffinity:
