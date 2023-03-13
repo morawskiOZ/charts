@@ -72,7 +72,7 @@ spec:
             failureThreshold: 3
           envFrom:
           - secretRef:
-              name: {{ template "campville.name" . }}-connection-secrets
+              name: {{ template "campville.name" . }}-secrets
           - configMapRef:
               name: {{ template "campville.name" . }}-config
           - configMapRef:
