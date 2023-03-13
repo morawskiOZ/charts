@@ -41,7 +41,7 @@ spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - image: docker.io/myuser/myimage:{{ .Values.todo.tag | default "latest" }}
+        - image: docker.io/morawskioz/binance-monitor:{{ .Values.todo.tag | default "latest" }}
           name: {{ template "app.name.todo" . }}
           securityContext:
             readOnlyRootFilesystem: true
