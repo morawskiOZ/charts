@@ -1,10 +1,10 @@
-env: production
+env: stage
 prefix: campville
 host: localhost
 fullBuild: true
 todo:
   enabled: true
   name: todo
-  tag: 8b1b3ba5
+  tag: latest
   autoscaling: false
   replicas: 1

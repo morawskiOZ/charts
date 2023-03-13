@@ -1,6 +1,1 @@
-APPLICATION_PORT: "80"
-CACHE_TIME: 3h
-LOGGER_CONSOLE: "true"
-LOGGER_LEVEL: error
-MONGO_DATABASE: campville
-TZ: Europe/Warsaw
+GIN_MODE: release

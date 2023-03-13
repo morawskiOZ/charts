@@ -39,9 +39,9 @@ spec:
       securityContext:
         runAsUser: 10000
       imagePullSecrets:
-        - name: registry-morawskioz-do
+        - name: regcred
       containers:
-        - image: registry.digitalocean.com/morawskioz-do/todo:{{ .Values.todo.tag | default "latest" }}
+        - image: docker.io/myuser/myimage:{{ .Values.todo.tag | default "latest" }}
           name: {{ template "app.name.todo" . }}
           securityContext:
             readOnlyRootFilesystem: true
@@ -78,6 +78,7 @@ spec:
           - configMapRef:
               name: {{ template "campville.name" . }}-public-api-config
           imagePullPolicy: Always
+
       restartPolicy: Always
       affinity:
         podAntiAffinity:
