@@ -78,7 +78,6 @@ spec:
           - configMapRef:
               name: {{ template "campville.name" . }}-public-api-config
           imagePullPolicy: Always
-
       restartPolicy: Always
       affinity:
         podAntiAffinity:

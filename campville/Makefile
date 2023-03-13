@@ -31,7 +31,7 @@ endif
 	kubeseal \
 	--controller-name=sealed-secrets-controller \
 	--controller-namespace=kube-system \
-	--scope cluster-wide \
+	--scope namespace-wide \
 	--format yaml | yq e '.spec.encryptedData' - > env/${ENV}/secrets.yaml
 
 generate-config-stage: export ENV=stage
