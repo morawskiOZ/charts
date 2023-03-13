@@ -1,5 +1,4 @@
 env: stage
-prefix: campville
 host: localhost
 fullBuild: true
 todo:
