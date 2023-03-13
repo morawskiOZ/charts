@@ -27,7 +27,7 @@ else
 endif
 
 
-	kubectl create secret generic campville-$(BUILD_ENV)-secrets --dry-run=client --from-env-file=env/${ENV}/.env -o yaml | \
+	kubectl create secret generic $(BUILD_ENV)-campville-secrets --dry-run=client --from-env-file=env/${ENV}/.env -o yaml | \
 	kubeseal \
 	--controller-name=sealed-secrets-controller \
 	--controller-namespace=kube-system \
